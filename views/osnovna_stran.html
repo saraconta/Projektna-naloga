@@ -1,0 +1,73 @@
+% rebase('base.html')
+<!-- Main container -->
+<nav class="level">
+    <div class="level-left">
+        <form method="POST" action="/zamenjaj-trenutni-predmet/">
+            <div class="buttons has-addons field is-horizontal">
+                % for indeks, predmet in enumerate(predmeti):
+                % if predmet == trenutni_predmet:
+                <button class="button is-primary is-selected" name="indeks" value="{{indeks}}">
+                    {{predmet.ime}}
+                </button>
+                % else:
+                <button class="button" name="indeks" value="{{indeks}}">
+                    {{ocena.ime}}
+                </button>
+                % end
+                % end
+            </div>
+        </form>
+
+    </div>
+
+    <div class="level-right">
+        <!-- <div class="level-item">
+            <p class="subtitle is-5">
+                <strong>123</strong> posts
+            </p>
+        </div> -->
+            <div class="level-item">
+                <a class="button is-info" href="/dodaj-predmet/">dodaj predmet</a>
+            </div>
+        </form>
+    </div>
+</nav>
+
+% if trenutni_predmet:
+
+<table class="table is-hoverable is-fullwidth">
+    <thead>
+        <tr>
+            <form method="POST" action="/dodaj/">
+                <td>
+                    <div class="control has-icons-left">
+                        <input class="input is-small" type="text" name="ime" placeholder="ime">
+                        <span class="icon is-small is-left">
+                            <i class="far fa-clipboard-check"></i>
+                        </span>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="control">
+                        <button class="button is-info is-small">dodaj</button>
+                    </div>
+                </td>
+            </form>
+        </tr>
+    </thead>
+    <tbody>
+        % for indeks, ocena in enumerate(ocene):
+        <tr>
+            <td>{{ predmet.ime }}</td>
+            <td></td>
+        </tr>
+        % end
+    </tbody>
+</table>
+
+% else:
+
+<p>Nimate še nobenega predmeta. <a href="/dodaj-predmet/">Dodajte ga!</a></p>
+
+%end
