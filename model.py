@@ -88,19 +88,16 @@ class Predmet:
 
 
 class Ocena:
-    def __init__(self, vrednost, opis):
+    def __init__(self, vrednost):
         self.vrednost = vrednost
-        self.opis = opis
 
     def v_slovar(self):
         return {
             "vrednost": self.vrednost,
-            "opis": self.opis,
         }
 
     @staticmethod
     def iz_slovarja(slovar):
         return Ocena(
             slovar["vrednost"],
-            slovar["opis"],
         )

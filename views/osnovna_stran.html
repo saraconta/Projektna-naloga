@@ -1,73 +1,76 @@
 % rebase('base.html')
-<!-- Main container -->
-<nav class="level">
-    <div class="level-left">
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+    <div class="container-fluid">
         <form method="POST" action="/zamenjaj-trenutni-predmet/">
-            <div class="buttons has-addons field is-horizontal">
+
+            <div class="nav-item">
+                
                 % for indeks, predmet in enumerate(predmeti):
                 % if predmet == trenutni_predmet:
-                <button class="button is-primary is-selected" name="indeks" value="{{indeks}}">
+                <button type="button" class="btn btn-primary" name="indeks" value="{{indeks}}">
                     {{predmet.ime}}
                 </button>
+                
                 % else:
-                <button class="button" name="indeks" value="{{indeks}}">
+                <button class="button" class="btn btn-primary" name="indeks" value="{{indeks}}">
                     {{ocena.ime}}
                 </button>
                 % end
                 % end
-            </div>
-        </form>
 
-    </div>
-
-    <div class="level-right">
-        <!-- <div class="level-item">
-            <p class="subtitle is-5">
-                <strong>123</strong> posts
-            </p>
-        </div> -->
-            <div class="level-item">
-                <a class="button is-info" href="/dodaj-predmet/">dodaj predmet</a>
             </div>
+
         </form>
     </div>
+
+    <div>
+        <a class="btn btn-primary" href="/dodaj-predmet/" role="button">
+            dodaj predmet
+        </a>
+    </div>
+
 </nav>
 
 % if trenutni_predmet:
 
-<table class="table is-hoverable is-fullwidth">
+<table class="table">
     <thead>
         <tr>
             <form method="POST" action="/dodaj/">
-                <td>
-                    <div class="control has-icons-left">
-                        <input class="input is-small" type="text" name="ime" placeholder="ime">
-                        <span class="icon is-small is-left">
+                <th scope="col">
+                    <div class="container-fluid">
+                        <input type="text" class="form-control" placeholder="ime" name="ime">
+
+                        <span  class="input-group-text">
                             <i class="far fa-clipboard-check"></i>
                         </span>
                     </div>
-                </td>
-
-                <td>
-                    <div class="control">
-                        <button class="button is-info is-small">dodaj</button>
+                </th>
+                <th scope="col">
+                    <div class="container-fluid">
+                        <button type="button" class="btn btn-primary">
+                            dodaj
+                        </button>
                     </div>
-                </td>
+                </th>
             </form>
         </tr>
-    </thead>
-    <tbody>
-        % for indeks, ocena in enumerate(ocene):
-        <tr>
-            <td>{{ predmet.ime }}</td>
-            <td></td>
-        </tr>
-        % end
-    </tbody>
+      </thead>
+      <tbody>
+            % for indeks, ocena in enumerate(ocene):
+            <tr>
+                <td>{{ predmet.ime }}</td>
+                <td></td>
+            </tr>
+      </tbody>
 </table>
 
 % else:
 
-<p>Nimate še nobenega predmeta. <a href="/dodaj-predmet/">Dodajte ga!</a></p>
+<p>
+    Nimate še predmeta. <a href="/dodaj-predmet/">Dodajte predmet!</a>
+</p>
 
-%end
+% end

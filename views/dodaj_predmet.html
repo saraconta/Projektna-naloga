@@ -1,0 +1,24 @@
+% rebase('base.html')
+<form method="POST">
+
+    <div class="container">
+        <label for="exampleInputEmail1" class="form-label">Ime</label>
+        <div class="form-control">
+            <input class="input" type="text" name="ime" placeholder="ime predmeta" value="{{polja.get('ime', '')}}">
+        </div>
+    </div>
+
+    <div class="fluid-container">
+        <div class="form-control">
+            <button type="button" class="btn btn-primary">
+                Dodaj
+            </button>
+        </div>
+        <div class="form-control">
+            <button type="button" class="btn btn-link" href="/">
+                Prekliči
+            </button>
+        </div>
+    </div>
+
+</form>

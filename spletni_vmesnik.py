@@ -1,4 +1,5 @@
 import bottle
+import os
 from model import Stanje, Ocena, Predmet
 
 
@@ -50,34 +51,49 @@ def odjava_post():
     bottle.redirect("/")
 
 
+@bottle.get("/registracija/")
+def registracija_get():
+    return bottle.template("registracija.html", napake={}, polja={}, uporabnisko_ime=None)
+
+
+@bottle.post("/registracija/")
+def registracija_post():
+    uporabnisko_ime = bottle.request.forms.getunicode("uporabnisko_ime")
+    if os.path.exists(uporabnisko_ime):
+        napake = {"uporabnisko_ime": "Uporabniško ime že obstaja."}
+        return bottle.template("registracija.html", napake=napake, polja={"uporabnisko_ime": uporabnisko_ime}, uporabnisko_ime=None)
+    else:
+        bottle.response.set_cookie("uporabnisko_ime", uporabnisko_ime, path="/")
+        Stanje().shrani_v_datoteko(uporabnisko_ime)
+        bottle.redirect("/")
+
+
 @bottle.post("/dodaj/")
-def dodaj_predmet():
-    ime = bottle.request.forms.getunicode("ime")
-    opis = bottle.request.forms.getunicode("opis")
-    poskus = bottle.request.forms.getunicode("poskus")
-    predmet = Predmet(ime, opis, poskus)
+def dodaj_oceno():
+    vrednost = bottle.request.forms.getunicode("vrednost")
+    ocena = Ocena(vrednost)
     stanje = nalozi_uporabnikovo_stanje()
-    stanje.dodaj_predmet(predmet)
+    stanje.dodaj_oceno(ocena)
     shrani_uporabnikovo_stanje(stanje)
     bottle.redirect("/")
 
 
-@bottle.get("/dodaj-oceno/")
-def dodaj_oceno_get():
-    return bottle.template("dodaj_oceno.html", napake={}, polja={})
+@bottle.get("/dodaj-predmet/")
+def dodaj_predmet_get():
+    return bottle.template("dodaj_predmet.html", napake={}, polja={})
 
 
-@bottle.post("/dodaj-oceno/")
-def dodaj_oceno_post():
-    vrednost = bottle.request.forms.getunicode("vrednost")
-    polja = {"vrednost": vrednost}
+@bottle.post("/dodaj-predmet/")
+def dodaj_predmet_post():
+    ime = bottle.request.forms.getunicode("ime")
+    polja = {"ime": ime}
     stanje = nalozi_uporabnikovo_stanje()
-    napake = stanje.preveri_podatke_novega_predmeta(vrednost)
+    napake = stanje.preveri_podatke_novega_predmeta(ime)
     if napake:
-        return bottle.template("dodaj_oceno.html", napake=napake, polja=polja)
+        return bottle.template("dodaj_predmet.html", napake=napake, polja=polja)
     else:
-        ocena = Ocena(vrednost)
-        stanje.dodaj_oceno(ocena)
+        predmet = Predmet(ime)
+        stanje.dodaj_predmet(predmet)
         shrani_uporabnikovo_stanje(stanje)
         bottle.redirect("/")
 
