@@ -2,9 +2,10 @@ import bottle
 import os
 from model import Stanje, Ocena, Predmet
 
+SKRIVNOST = "danesjelepdan"
 
 def nalozi_uporabnikovo_stanje():
-    uporabnisko_ime = bottle.request.get_cookie("uporabnisko_ime")
+    uporabnisko_ime = bottle.request.get_cookie("uporabnisko_ime", secret=SKRIVNOST)
     if uporabnisko_ime:
         try:
             stanje = Stanje.preberi_iz_datoteke(uporabnisko_ime)
@@ -16,7 +17,7 @@ def nalozi_uporabnikovo_stanje():
 
 
 def shrani_uporabnikovo_stanje(stanje):
-    uporabnisko_ime = bottle.request.get_cookie("uporabnisko_ime")
+    uporabnisko_ime = bottle.request.get_cookie("uporabnisko_ime", secret=SKRIVNOST)
     stanje.shrani_v_datoteko(uporabnisko_ime)
 
 
@@ -25,10 +26,10 @@ def osnovna_stran():
     stanje = nalozi_uporabnikovo_stanje()
     return bottle.template(
         "osnovna_stran.html",
-        ocene=stanje.trenutni_predmet.ocene if stanje.trenutni_predmet else [],
-        predmeti=stanje.predmeti,
-        trenutni_predmet=stanje.trenutni_predmet,
-        uporabnisko_ime=bottle.request.get_cookie("uporabnisko_ime"),
+        predmeti = stanje.predmeti,
+        trenutni_predmet = stanje.trenutni_predmet,
+        ocene = stanje.predmeti[stanje.trenutni_predmet].ocene if stanje.trenutni_predmet is not None else [],
+        uporabnisko_ime = bottle.request.get_cookie("uporabnisko_ime", secret=SKRIVNOST),
     )
 
 
@@ -40,13 +41,13 @@ def prijava_get():
 @bottle.post("/prijava/")
 def prijava_post():
     uporabnisko_ime = bottle.request.forms.getunicode("uporabnisko_ime")
-    bottle.response.set_cookie("uporabnisko_ime", uporabnisko_ime, path="/")
+    bottle.response.set_cookie("uporabnisko_ime", uporabnisko_ime, path="/", secret=SKRIVNOST)
     bottle.redirect("/")
 
 
 @bottle.post("/odjava/")
 def odjava_post():
-    bottle.response.delete_cookie("uporabnisko_ime", path="/")
+    bottle.response.delete_cookie("uporabnisko_ime", path="/", secret=SKRIVNOST)
     print("piškotek uspešno pobrisan")
     bottle.redirect("/")
 
@@ -63,7 +64,7 @@ def registracija_post():
         napake = {"uporabnisko_ime": "Uporabniško ime že obstaja."}
         return bottle.template("registracija.html", napake=napake, polja={"uporabnisko_ime": uporabnisko_ime}, uporabnisko_ime=None)
     else:
-        bottle.response.set_cookie("uporabnisko_ime", uporabnisko_ime, path="/")
+        bottle.response.set_cookie("uporabnisko_ime", uporabnisko_ime, path="/", secret=SKRIVNOST)
         Stanje().shrani_v_datoteko(uporabnisko_ime)
         bottle.redirect("/")
 
@@ -80,7 +81,7 @@ def dodaj_oceno():
 
 @bottle.get("/dodaj-predmet/")
 def dodaj_predmet_get():
-    return bottle.template("dodaj_predmet.html", napake={}, polja={})
+    return bottle.template("dodaj_predmet.html", napake={}, polja={}, uporabnisko_ime=bottle.request.get_cookie("uporabnisko_ime", secret=SKRIVNOST))
 
 
 @bottle.post("/dodaj-predmet/")
@@ -89,10 +90,11 @@ def dodaj_predmet_post():
     polja = {"ime": ime}
     stanje = nalozi_uporabnikovo_stanje()
     napake = stanje.preveri_podatke_novega_predmeta(ime)
+    print(napake)
     if napake:
-        return bottle.template("dodaj_predmet.html", napake=napake, polja=polja)
+        return bottle.template("dodaj_predmet.html", napake=napake, polja=polja, uporabnisko_ime=bottle.request.get_cookie("uporabnisko_ime", secret=SKRIVNOST))
     else:
-        predmet = Predmet(ime)
+        predmet = Predmet(ime, ocene=[])
         stanje.dodaj_predmet(predmet)
         shrani_uporabnikovo_stanje(stanje)
         bottle.redirect("/")
@@ -103,8 +105,7 @@ def zamenjaj_trenutni_predmet():
     print(dict(bottle.request.forms))
     indeks = bottle.request.forms.getunicode("indeks")
     stanje = nalozi_uporabnikovo_stanje()
-    ocena = stanje.ocene[int(indeks)]
-    stanje.trenutni_predmet = ocena
+    stanje.trenutni_predmet = indeks
     shrani_uporabnikovo_stanje(stanje)
     bottle.redirect("/")
 

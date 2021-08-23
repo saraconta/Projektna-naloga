@@ -94,7 +94,7 @@ def prikazi_pozdravno_sporocilo():
 
 def prikazi_trenutni_predmet():
     if moj_model.trenutni_predmet:
-        for predmet in moj_model.trenutni_predmet.ocene:
+        for ocena in moj_model.trenutni_predmet.ocene:
             print(f"- {prikaz_ocene(ocena)}")
     else:
         print("Ker nimate še nobenega predmeta, morate enega ustvariti.")

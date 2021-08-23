@@ -7,26 +7,26 @@ class Stanje:
 
     def dodaj_predmet(self, predmet):
         self.predmeti.append(predmet)
-        if not self.trenutni_predmet:
-            self.trenutni_predmet = predmet
+        if self.trenutni_predmet is None:
+            self.trenutni_predmet = len(self.predmeti) - 1
 
     def pobrisi_predmet(self, predmet):
         self.predmeti.remove(predmet)
 
     def zamenjaj_predmet(self, predmet):
-        self.trenutni_predmet = predmet
+        self.trenutni_predmet = self.predmeti.index(predmet)
 
     def dodaj_oceno(self, ocena):
-        self.trenutni_predmet.dodaj_oceno(ocena)
+        self.predmeti[self.trenutni_predmet].dodaj_oceno(ocena)
 
     def pobrisi_oceno(self, ocena):
-        self.trenutni_predmet.pobrisi_oceno(ocena)
+        self.predmeti[self.trenutni_predmet].pobrisi_oceno(ocena)
 
     def v_slovar(self):
         return {
             "predmeti": [predmet.v_slovar() for predmet in self.predmeti],
-            "trenutni_predmet": self.predmeti.index(self.trenutni_predmet)
-            if self.trenutni_predmet
+            "trenutni_predmet": int(self.trenutni_predmet)
+            if self.trenutni_predmet != "None"
             else None,
         }
 
@@ -37,7 +37,7 @@ class Stanje:
             Predmet.iz_slovarja(sl_predmeta) for sl_predmeta in slovar["predmeti"]
         ]
         if slovar["trenutni_predmet"] is not None:
-            stanje.trenutni_predmet = stanje.predmeti[slovar["trenutni_predmet"]]
+            stanje.trenutni_predmet = int(slovar["trenutni_predmet"])
         return stanje
 
     def shrani_v_datoteko(self, ime_datoteke):
@@ -62,12 +62,12 @@ class Stanje:
 
 
 class Predmet:
-    def __init__(self, ime):
+    def __init__(self, ime, ocene):
         self.ime = ime
-        self.predmeti = []
+        self.ocene = []
 
     def dodaj_oceno(self, ocena):
-        self.opravila.append(ocena)
+        self.ocene.append(ocena)
 
     def stevilo_vseh(self):
         return len(self.ocene)
@@ -80,10 +80,10 @@ class Predmet:
 
     @staticmethod
     def iz_slovarja(slovar):
-        predmet = Predmet(slovar["ime"])
-        predmet.ocene = [
+        ocene = [
             Ocena.iz_slovarja(sl_ocene) for sl_ocene in slovar["ocene"]
         ]
+        predmet = Predmet(slovar["ime"], ocene)
         return predmet
 
 

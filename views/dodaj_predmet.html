@@ -1,5 +1,11 @@
 % rebase('base.html')
-<form method="POST">
+<form method="POST" action="/dodaj-predmet/">
+
+    % if napake:
+        % for napaka in napake:
+            {{napake[napaka]}}
+        % end
+    % end
 
     <div class="container">
         <label for="exampleInputEmail1" class="form-label">Ime</label>
@@ -10,7 +16,7 @@
 
     <div class="fluid-container">
         <div class="form-control">
-            <button type="button" class="btn btn-primary">
+            <button type="submit">
                 Dodaj
             </button>
         </div>

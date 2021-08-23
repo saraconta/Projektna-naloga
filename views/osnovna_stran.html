@@ -8,16 +8,9 @@
             <div class="nav-item">
                 
                 % for indeks, predmet in enumerate(predmeti):
-                % if predmet == trenutni_predmet:
-                <button type="button" class="btn btn-primary" name="indeks" value="{{indeks}}">
+                <button type="submit" class="btn btn-primary" name="indeks" value="{{indeks}}">
                     {{predmet.ime}}
                 </button>
-                
-                % else:
-                <button class="button" class="btn btn-primary" name="indeks" value="{{indeks}}">
-                    {{ocena.ime}}
-                </button>
-                % end
                 % end
 
             </div>
@@ -41,7 +34,7 @@
             <form method="POST" action="/dodaj/">
                 <th scope="col">
                     <div class="container-fluid">
-                        <input type="text" class="form-control" placeholder="ime" name="ime">
+                        <input type="text" class="form-control" placeholder="vrednost ocene" name="vrednost">
 
                         <span  class="input-group-text">
                             <i class="far fa-clipboard-check"></i>
@@ -50,7 +43,7 @@
                 </th>
                 <th scope="col">
                     <div class="container-fluid">
-                        <button type="button" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary">
                             dodaj
                         </button>
                     </div>
