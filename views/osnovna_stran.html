@@ -48,13 +48,16 @@
             </tr>
         </thead>
         <tbody>
-                % for indeks, ocena in enumerate(ocene):
+            <tr>
+                <td>Predmet</td>
+                <td>Ocena</td>
+            </tr>
+            % for indeks, ocena in enumerate(ocene):
                 <tr>
-                    <td>{{ predmet.ime }}</td>
-                    <td>
-                        Vaše ocene so :{{ predmet.ocene[0] }}
-                    </td>
+                    <td scope="row">{{ predmet.ime }}</td>
+                    <td>{{ ocena.vrednost }}</td>
                 </tr>
+            % end
         </tbody>
     </table>
     </div>
