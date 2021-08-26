@@ -104,7 +104,7 @@ def prikazi_trenutni_predmet():
 def dodaj_predmet():
     print("Vnesite podatke novega predmeta.")
     ime = input("Ime> ")
-    nov_predmet = Predmet(ime)
+    nov_predmet = Predmet(ime, ocene=[])
     moj_model.dodaj_predmet(nov_predmet)
 
 
