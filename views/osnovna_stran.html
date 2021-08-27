@@ -24,33 +24,29 @@
 
 % if trenutni_predmet is not None:
     <div class="container-fluid">
-    <table class="table">
-        <tr>
-            <form method="POST" action="/dodaj/">
-                <th scope="col">
-                    <div class="container-fluid">
-                        <input type="text" class="form-control" placeholder="vrednost ocene" name="vrednost">
-                        <span  class="input-group-text">
-                            <i class="far fa-clipboard-check"></i>
-                        </span>
-                    </div>
-                </th>
-                <th scope="col">
-                    <div class="container-fluid">
-                        <button type="submit" class="btn btn-primary">
-                            Dodaj oceno
-                        </button>
-                    </div>
-                </th>
-            </form>
-        </tr>
+        <form method="POST" action="/dodaj/">
+            <div class="container-fluid">
+                <input type="text" class="form-control" placeholder="vrednost ocene" name="vrednost">
+                <span  class="input-group-text">
+                    <i class="far fa-clipboard-check"></i>
+                </span>
+            </div>
+            <div class="container-fluid">
+                <button type="submit" class="btn btn-primary">
+                    Dodaj oceno
+                </button>
+            </div>
+        </form>
+
+        <div>
+            <p>Pri tem predmetu imate oceno:</p>
+        </div>
+
+        <div>
         % for indeks, ocena in enumerate(ocene):
-            <tr>
-                <td> Pri tem predmetu imate oceno: </td>
-                <td>{{ ocena.vrednost }}</td>
-            </tr>
+            {{ocena.vrednost}}
         % end
-    </table>
+        </div>
     </div>
 
 % else:
