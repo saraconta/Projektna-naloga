@@ -64,7 +64,7 @@ class Stanje:
 class Predmet:
     def __init__(self, ime, ocene):
         self.ime = ime
-        self.ocene = []
+        self.ocene = ocene
 
     def dodaj_oceno(self, ocena):
         self.ocene.append(ocena)
